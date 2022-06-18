@@ -1,5 +1,6 @@
 import express from "express";
 import { createServer } from "http";
+import { webSockertService } from "./services/WebSockertService";
 
 function boot(port: number) {
   const app = express();
@@ -12,6 +13,8 @@ function boot(port: number) {
   app.all("*", (req, res) => {
     return res.send("Not Found");
   });
+
+  webSockertService.init(server);
 
   server.listen(port, () => {
     console.log("Server is running at port", port);
