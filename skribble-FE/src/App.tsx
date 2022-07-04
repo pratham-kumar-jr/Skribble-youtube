@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Canvas from "./components/Canvas";
+import { canvasService } from "./service/CanvasService";
 
 interface Props {}
 
@@ -18,26 +19,14 @@ const App: React.FC<Props> = (props) => {
     cx: number,
     cy: number
   ) => {
-    if (!drawing) return;
+    if (!drawing || !context) return;
     if (pencil === 0) {
-      sx *= width;
-      sy *= height;
-      cx *= width;
-      cy *= height;
-
-      context.beginPath();
-      context.moveTo(sx, sy);
-      context.lineTo(cx, cy);
-      context.fillStyle = "black";
-      context.lineWidth = 3;
-      context.stroke();
+      canvasService.drawOnCanvas(sx, sy, cx, cy);
+      canvasService.searlizeCanvas([pencil, sx, sy, cx, cy]);
     } else if (pencil === 1) {
       //eraser
-
-      cx *= width;
-      cy *= height;
-      context.fillStyle = "white";
-      context.fillRect(cx, cy, 20, 20);
+      canvasService.eraseOnCanvas(cx, cy, 20);
+      canvasService.searlizeCanvas([pencil, cx, cy]);
     }
   };
 

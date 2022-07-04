@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { canvasService } from "../service/CanvasService";
 
 interface Point {
   X: number;
@@ -40,6 +41,7 @@ const Canvas: React.FC<Props> = ({
     canvas.width = width;
     canvas.style.height = "100%";
     canvas.style.width = "100%";
+    canvasService.setCanvas(canvas);
   }, [width, height]);
 
   const startDrawing = ({ nativeEvent }: any) => {

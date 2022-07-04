@@ -3,16 +3,16 @@ import { Server as httpServer } from "http";
 import GameHandler from "../handler/GameHandler";
 import { EventTypeEnum } from "../enums/EventTypeEnum";
 
-class WebSockertService {
-  private static _instance: WebSockertService | null;
+class WebSocketService {
+  private static _instance: WebSocketService | null;
   private io: Server | null = null;
   private constructor() {}
 
-  public static getInstance(): WebSockertService {
-    if (!WebSockertService._instance) {
-      WebSockertService._instance = new WebSockertService();
+  public static getInstance(): WebSocketService {
+    if (!WebSocketService._instance) {
+      WebSocketService._instance = new WebSocketService();
     }
-    return WebSockertService._instance;
+    return WebSocketService._instance;
   }
 
   public init(server: httpServer) {
@@ -24,7 +24,7 @@ class WebSockertService {
     });
 
     this.io.on("connection", (socket) => {
-      GameHandler.gameCreateHandler(socket);
+      Object.values(GameHandler).map((handler) => handler(socket));
     });
   }
 
@@ -35,6 +35,10 @@ class WebSockertService {
   public sendToRoom(roomId: string, event: EventTypeEnum, message: any) {
     this.io?.to(roomId).emit(event, message);
   }
+
+  public sendToAll(socket: Socket, event: string, message: any) {
+    socket.broadcast.emit(event, message);
+  }
 }
 
-export const webSockertService = WebSockertService.getInstance();
+export const webSocketService = WebSocketService.getInstance();
